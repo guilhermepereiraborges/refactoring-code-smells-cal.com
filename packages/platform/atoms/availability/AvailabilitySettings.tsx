@@ -47,7 +47,16 @@ import { Tooltip } from "@calcom/ui/components/tooltip";
 import { Shell as PlatformShell } from "../src/components/ui/shell";
 import { cn } from "../src/lib/utils";
 import { Timezone as PlatformTimzoneSelect } from "../timezone/index";
-import type { AvailabilityFormValues, scheduleClassNames, AvailabilitySettingsFormRef } from "./types";
+import type {
+  AvailabilityFormValues,
+  scheduleClassNames,
+  AvailabilitySettingsFormRef,
+  TimeFormat,
+  BackPath,
+  AvailabilitySettingsFormCallbacks,
+} from "./types";
+
+type WeekDayIndex = 0 | 1 | 2 | 3 | 4 | 5 | 6;
 
 export type Schedule = {
   id: number;
@@ -106,9 +115,9 @@ type AvailabilitySettingsProps = {
   isDeleting: boolean;
   isSaving: boolean;
   isLoading: boolean;
-  timeFormat: number | null;
+  timeFormat: TimeFormat;
   weekStart: string;
-  backPath: string | boolean;
+  backPath: BackPath;
   handleSubmit: (data: AvailabilityFormValues) => Promise<void>;
   isPlatform?: boolean;
   customClassNames?: CustomClassNames;
@@ -124,7 +133,7 @@ type AvailabilitySettingsProps = {
     isEventTypesFetching?: boolean;
     handleBulkEditDialogToggle: () => void;
   };
-  callbacksRef?: React.MutableRefObject<{ onSuccess?: () => void; onError?: (error: Error) => void }>;
+  callbacksRef?: React.MutableRefObject<AvailabilitySettingsFormCallbacks>;
   isDryRun?: boolean;
 };
 
@@ -194,9 +203,9 @@ const DateOverride = ({
   isDryRun = false,
 }: {
   workingHours: WorkingHours[];
-  userTimeFormat: number | null;
+  userTimeFormat: TimeFormat;
   travelSchedules?: RouterOutputs["viewer"]["travelSchedules"]["get"];
-  weekStart: 0 | 1 | 2 | 3 | 4 | 5 | 6;
+  weekStart: WeekDayIndex;
   overridesModalClassNames?: string;
   classNames?: {
     container?: string;
@@ -345,7 +354,7 @@ export const AvailabilitySettings = forwardRef<AvailabilitySettingsFormRef, Avai
     const saveButtonRef = useRef<HTMLButtonElement>(null);
 
     const handleFormSubmit = useCallback(
-      (customCallbacks?: { onSuccess?: () => void; onError?: (error: Error) => void }) => {
+      (customCallbacks?: AvailabilitySettingsFormCallbacks) => {
         if (callbacksRef && customCallbacks) {
           callbacksRef.current = customCallbacks;
         }
@@ -672,7 +681,7 @@ export const AvailabilitySettings = forwardRef<AvailabilitySettingsFormRef, Avai
                           "Thursday",
                           "Friday",
                           "Saturday",
-                        ].indexOf(weekStart) as 0 | 1 | 2 | 3 | 4 | 5 | 6
+                        ].indexOf(weekStart) as WeekDayIndex
                       }
                     />
                   )}
@@ -696,7 +705,7 @@ export const AvailabilitySettings = forwardRef<AvailabilitySettingsFormRef, Avai
                           "Thursday",
                           "Friday",
                           "Saturday",
-                        ].indexOf(weekStart) as 0 | 1 | 2 | 3 | 4 | 5 | 6
+                        ].indexOf(weekStart) as WeekDayIndex
                       }
                       overridesModalClassNames={customClassNames?.overridesModalClassNames}
                       classNames={customClassNames?.dateOverrideClassNames}

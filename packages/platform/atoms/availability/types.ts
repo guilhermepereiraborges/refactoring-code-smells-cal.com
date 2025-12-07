@@ -13,6 +13,10 @@ export type Availability = {
 
 export type WeekdayFormat = "short" | "long";
 
+export type TimeFormat = number | null;
+
+export type BackPath = string | boolean;
+
 export type AvailabilityFormValues = {
   name: string;
   schedule: ScheduleType;
