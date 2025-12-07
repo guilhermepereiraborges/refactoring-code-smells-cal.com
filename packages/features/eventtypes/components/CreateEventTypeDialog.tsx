@@ -18,21 +18,25 @@ import { showToast } from "@calcom/ui/components/toast";
 
 import CreateEventTypeForm from "./CreateEventTypeForm";
 
+type NullableString = string | null;
+type NullableNumber = number | null | undefined;
+type NullableMembershipRole = MembershipRole | null | undefined;
+
 // this describes the uniform data needed to create a new event type on Profile or Team
 export interface EventTypeParent {
-  teamId: number | null | undefined; // if undefined, then it's a profile
+  teamId: NullableNumber; // if undefined, then it's a profile
   membershipRole?: MembershipRole | null;
-  name?: string | null;
-  slug?: string | null;
-  image?: string | null;
+  name?: NullableString;
+  slug?: NullableString;
+  image?: NullableString;
 }
 
 export interface ProfileOption {
-  teamId: number | null | undefined;
-  label: string | null;
+  teamId: NullableNumber;
+  label: NullableString;
   image: string;
-  membershipRole: MembershipRole | null | undefined;
-  slug: string | null;
+  membershipRole: NullableMembershipRole;
+  slug: NullableString;
   permissions: {
     canCreateEventType: boolean;
   };
