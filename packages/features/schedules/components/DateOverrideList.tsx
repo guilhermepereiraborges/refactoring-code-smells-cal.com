@@ -17,6 +17,11 @@ const sortByDate = (a: { ranges: TimeRange[]; id: string }, b: { ranges: TimeRan
 };
 
 // I would like this to be decoupled, but RHF really doesn't support this.
+type DateOverrideItem = {
+  ranges: TimeRange[];
+  id?: string;
+};
+
 const DateOverrideList = ({
   workingHours,
   excludedDates = [],
@@ -29,8 +34,7 @@ const DateOverrideList = ({
   handleAvailabilityUpdate = noop,
   isDryRun = false,
 }: {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  replace: any;
+  replace: (items: DateOverrideItem[]) => void;
   fields: { ranges: TimeRange[]; id: string }[];
   workingHours: WorkingHours[];
   excludedDates?: string[];
