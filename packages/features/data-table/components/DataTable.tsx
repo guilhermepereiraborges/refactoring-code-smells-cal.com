@@ -26,11 +26,16 @@ import { useColumnResizing } from "../hooks/useColumnResizing";
 import type { SeparatorRow } from "../lib/separator";
 import { isSeparatorRow } from "../lib/separator";
 
+type TableVariant = "default" | "compact";
+type PaginationMode = "infinite" | "standard";
+type RowClassNameProp<TData> = string | ((row: Row<TData>) => string);
+type RowTestIdProp<TData> = string | ((row: Row<TData>) => string | undefined);
+
 export type DataTablePropsFromWrapper<TData> = {
   table: ReactTableType<TData>;
   tableContainerRef: React.RefObject<HTMLDivElement>;
   isPending?: boolean;
-  variant?: "default" | "compact";
+  variant?: TableVariant;
   testId?: string;
   bodyTestId?: string;
   children?: React.ReactNode;
@@ -38,10 +43,10 @@ export type DataTablePropsFromWrapper<TData> = {
   className?: string;
   containerClassName?: string;
   headerClassName?: string;
-  rowClassName?: string | ((row: Row<TData>) => string);
-  rowTestId?: string | ((row: Row<TData>) => string | undefined);
+  rowClassName?: RowClassNameProp<TData>;
+  rowTestId?: RowTestIdProp<TData>;
   rowDataAttributes?: (row: Row<TData>) => Record<string, string> | undefined;
-  paginationMode?: "infinite" | "standard";
+  paginationMode?: PaginationMode;
   hasWrapperContext?: boolean;
   hideSeparatorsOnSort?: boolean;
   hideSeparatorsOnFilter?: boolean;
@@ -265,12 +270,12 @@ type DataTableBodyProps<TData> = {
   rowVirtualizer: Virtualizer<HTMLDivElement, Element>;
   rows: Row<TData>[];
   testId?: string;
-  variant?: "default" | "compact";
+  variant?: TableVariant;
   isPending?: boolean;
   onRowMouseclick?: (row: Row<TData>) => void;
-  paginationMode?: "infinite" | "standard";
-  rowClassName?: string | ((row: Row<TData>) => string);
-  rowTestId?: string | ((row: Row<TData>) => string | undefined);
+  paginationMode?: PaginationMode;
+  rowClassName?: RowClassNameProp<TData>;
+  rowTestId?: RowTestIdProp<TData>;
   rowDataAttributes?: (row: Row<TData>) => Record<string, string> | undefined;
   hideSeparatorsOnSort?: boolean;
   hideSeparatorsOnFilter?: boolean;
@@ -312,7 +317,7 @@ function DataTableBody<TData>({
   hideSeparatorsOnFilter = false,
   separatorClassName,
   tableContainerRef,
-}: DataTableBodyProps<TData> & { paginationMode?: "infinite" | "standard" }) {
+}: DataTableBodyProps<TData> & { paginationMode?: PaginationMode }) {
   const { t } = useLocale();
 
   const hasActiveSorting = table.getState().sorting.length > 0;
