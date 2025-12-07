@@ -147,8 +147,7 @@ export const SelectedCalendarsSettingsWebWrapper = (props: SelectedCalendarsSett
 
   const query = trpc.viewer.calendars.connectedCalendars.useQuery(
     {
-       
-      eventTypeId: scope === SelectedCalendarSettingsScope.EventType ? eventTypeId! : null,
+      eventTypeId: scope === SelectedCalendarSettingsScope.EventType ? (eventTypeId ?? null) : null,
     },
     {
       suspense: true,
