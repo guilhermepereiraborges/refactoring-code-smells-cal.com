@@ -11,13 +11,17 @@ import classNames from "@calcom/ui/classNames";
 import { Icon } from "@calcom/ui/components/icon";
 import { Tooltip } from "@calcom/ui/components/tooltip";
 
+type EventLocationType = DefaultEventLocationType | EventLocationTypeFromApp;
+type PartialLocationObject = Pick<Partial<LocationObject>, "link" | "address"> &
+  Omit<LocationObject, "link" | "address">;
+
 const excludeNullValues = (value: unknown) => !!value;
 
 function RenderIcon({
   eventLocationType,
   isTooltip,
 }: {
-  eventLocationType: DefaultEventLocationType | EventLocationTypeFromApp;
+  eventLocationType: EventLocationType;
   isTooltip: boolean;
 }) {
   const isPlatform = useIsPlatform();
@@ -38,11 +42,7 @@ function RenderLocationTooltip({ locations }: { locations: LocationObject[] }) {
     <div className="my-2 me-2 flex w-full flex-col stack-y-3 wrap-break-word">
       <p>{t("select_on_next_step")}</p>
       {locations.map(
-        (
-          location: Pick<Partial<LocationObject>, "link" | "address"> &
-            Omit<LocationObject, "link" | "address">,
-          index: number
-        ) => {
+        (location: PartialLocationObject, index: number) => {
           const eventLocationType = getEventLocationType(location.type);
           if (!eventLocationType) {
             return null;
@@ -66,10 +66,7 @@ export function AvailableEventLocations({ locations }: { locations: LocationObje
   const isPlatform = useIsPlatform();
 
   const renderLocations = locations.map(
-    (
-      location: Pick<Partial<LocationObject>, "link" | "address"> & Omit<LocationObject, "link" | "address">,
-      index: number
-    ) => {
+    (location: PartialLocationObject, index: number) => {
       const eventLocationType = getEventLocationType(location.type);
       if (!eventLocationType) {
         // It's possible that the location app got uninstalled
