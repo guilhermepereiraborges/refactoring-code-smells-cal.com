@@ -30,6 +30,17 @@ export default function More() {
     }
   };
 
+  const handleItemPress = (item: MoreMenuItem) => {
+    if (item.href) {
+      router.push(item.href);
+      return;
+    }
+
+    if (item.onPress) {
+      item.onPress();
+    }
+  };
+
   const menuItems: MoreMenuItem[] = [
     {
       name: "Profile",
@@ -81,7 +92,7 @@ export default function More() {
           {menuItems.map((item, index) => (
             <TouchableOpacity
               key={item.name}
-              onPress={item.href ? () => router.push(item.href!) : item.onPress}
+              onPress={() => handleItemPress(item)}
               className={`flex-row items-center justify-between bg-white px-5 py-5 active:bg-[#F8F9FA] ${
                 index < menuItems.length - 1 ? "border-b border-[#E5E5EA]" : ""
               }`}
