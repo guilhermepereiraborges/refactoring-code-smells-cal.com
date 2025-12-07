@@ -2,17 +2,19 @@ import { useLocale } from "@calcom/lib/hooks/useLocale";
 import { Badge } from "@calcom/ui/components/badge";
 import { Icon } from "@calcom/ui/components/icon";
 
+type NullableString = string | null;
+
 export interface DecoyBookingSuccessCardProps {
   title: string;
   formattedDate: string;
   formattedTime: string;
   endTime: string;
   formattedTimeZone: string;
-  hostName: string | null;
-  hostEmail: string | null;
-  attendeeName: string | null;
-  attendeeEmail: string | null;
-  location: string | null;
+  hostName: NullableString;
+  hostEmail: NullableString;
+  attendeeName: NullableString;
+  attendeeEmail: NullableString;
+  location: NullableString;
 }
 
 export function DecoyBookingSuccessCard({
