@@ -142,7 +142,7 @@ export default function Booker( props : BookerProps ) {
       <BookerEmbed
         // Use the parsed username and event slug from calLink
         eventSlug={eventSlug}
-        // layout can be of three types: COLUMN_VIEW, MONTH_VIEW or WEEK_VIEW, 
+        // layout can be of three types: COLUMN_VIEW, MONTH_VIEW or WEEK_VIEW,
         // you can choose whichever you prefer
         view="${previewState.config?.layout || "MONTH_VIEW"}"
         username={calUsername}
@@ -180,7 +180,7 @@ export default function Booker( props : BookerProps ) {
       <BookerEmbed
         // Use the parsed username and event slug from calLink
         eventSlug={eventSlug}
-        // layout can be of three types: COLUMN_VIEW, MONTH_VIEW or WEEK_VIEW, 
+        // layout can be of three types: COLUMN_VIEW, MONTH_VIEW or WEEK_VIEW,
         // you can choose whichever you prefer
         view="${previewState.config?.layout || "MONTH_VIEW"}"
         username={calUsername}
@@ -279,7 +279,7 @@ export default function Booker( props : BookerProps ) {
       return code`${getApiNameForVanillaJsSnippet({
         namespace,
         mainApiName: "Cal",
-      })}("floatingButton", ${floatingButtonArg}); 
+      })}("floatingButton", ${floatingButtonArg});
   ${uiInstructionCode}`;
     },
     "element-click": ({
@@ -330,12 +330,11 @@ const code = (partsWithoutBlock: TemplateStringsArray, ...blocksOrVariables: str
     block.split("\n").forEach((line) => {
       indentedBlock.push(line);
     });
-    // non-null assertion is okay because we know that we are referencing last element.
-    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
     const indentationMatch = partWithoutBlock
       .split("\n")
-      .at(-1)!
-      .match(/(^[\t ]*).*$/);
+      .at(-1)
+      ?.match(/(^[\t ]*).*$/);
+
     if (indentationMatch) {
       indent = indentationMatch[1];
     }
