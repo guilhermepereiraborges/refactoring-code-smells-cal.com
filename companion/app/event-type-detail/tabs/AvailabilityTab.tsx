@@ -10,12 +10,17 @@ interface DaySchedule {
   endTime?: string;
 }
 
+interface ScheduleDetails {
+  timeZone?: string;
+  [key: string]: unknown;
+}
+
 interface AvailabilityTabProps {
   selectedSchedule: Schedule | null;
   setShowScheduleDropdown: (show: boolean) => void;
   schedulesLoading: boolean;
   scheduleDetailsLoading: boolean;
-  selectedScheduleDetails: any;
+  selectedScheduleDetails: ScheduleDetails | null;
   getDaySchedule: () => DaySchedule[];
   formatTime: (time: string) => string;
   selectedTimezone: string;
