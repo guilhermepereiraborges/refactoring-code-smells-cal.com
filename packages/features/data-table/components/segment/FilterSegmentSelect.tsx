@@ -117,7 +117,12 @@ export function FilterSegmentSelect() {
     const teamSegmentsByTeam = teamSegments.reduce<{
       [teamName: string]: UserFilterSegment[];
     }>((acc, segment) => {
-      const teamName = segment.team!.name;
+      const teamName = segment.team?.name;
+
+      if (!teamName) {
+        return acc;
+      }
+
       if (!acc[teamName]) {
         acc[teamName] = [];
       }
