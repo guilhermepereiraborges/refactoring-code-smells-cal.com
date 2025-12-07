@@ -80,12 +80,14 @@ export default function WorkflowListPage({ workflows }: Props) {
   });
 
   async function moveWorkflow(index: number, increment: 1 | -1) {
-    const types = workflows!;
 
-    const newList = [...types];
 
-    const type = types[index];
-    const tmp = types[index + increment];
+    if (!workflows) return;
+
+    const newList = [...workflows];
+
+    const type = workflows[index];
+    const tmp = workflows[index + increment];
     if (tmp) {
       newList[index] = tmp;
       newList[index + increment] = type;
