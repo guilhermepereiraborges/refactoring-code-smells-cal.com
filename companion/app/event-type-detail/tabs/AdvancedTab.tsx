@@ -63,7 +63,11 @@ interface AdvancedTabProps {
 }
 
 export function AdvancedTab(props: AdvancedTabProps) {
-  const layoutOptions = [
+  const layoutOptions: {
+    id: string;
+    label: string;
+    icon: keyof typeof Ionicons.glyphMap;
+  }[] = [
     { id: "MONTH_VIEW", label: "Month", icon: "calendar-outline" },
     { id: "WEEK_VIEW", label: "Weekly", icon: "calendar-outline" },
     { id: "COLUMN_VIEW", label: "Column", icon: "list-outline" },
@@ -137,7 +141,7 @@ export function AdvancedTab(props: AdvancedTabProps) {
               }}
             >
               <View className="flex-row items-center gap-2">
-                <Ionicons name={layout.icon as any} size={20} color="#333" />
+                <Ionicons name={layout.icon} size={20} color="#333" />
                 <Text className="text-base text-[#333]">{layout.label}</Text>
               </View>
               {props.selectedLayouts.includes(layout.id) && (
