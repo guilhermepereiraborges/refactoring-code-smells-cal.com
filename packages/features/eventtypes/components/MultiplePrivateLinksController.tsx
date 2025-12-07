@@ -213,7 +213,7 @@ export const MultiplePrivateLinksController = ({
             .map((val, originalIndex) => {
               const expired = isLinkExpired(val);
               const hasExpiry = !!val.expiresAt;
-              const expiryTime = hasExpiry ? new Date(val.expiresAt!).getTime() : null;
+              const expiryTime = val.expiresAt ? new Date(val.expiresAt).getTime() : null;
 
               return {
                 val,
@@ -237,8 +237,8 @@ export const MultiplePrivateLinksController = ({
                 }
 
                 // Both have expiry, sort by expiry time
-                if (a.hasExpiry && b.hasExpiry) {
-                  return a.expiryTime! - b.expiryTime!;
+                if (a.expiryTime !== null && b.expiryTime !== null) {
+                  return a.expiryTime - b.expiryTime;
                 }
 
                 // Neither has expiry: preserve original order (descending)
