@@ -274,6 +274,14 @@ export const BookEventForm = ({
     </div>
   );
 };
+interface DataErrorShape {
+  message?: string;
+  data?: {
+    startTime?: string;
+    count?: number;
+    traceId?: string;
+  };
+}
 
 const getError = ({
   globalError,
@@ -285,11 +293,7 @@ const getError = ({
   language,
 }: {
   globalError: FieldError | undefined;
-  // It feels like an implementation detail to reimplement the types of useMutation here.
-  // Since they don't matter for this function, I'd rather disable them then giving you
-  // the cognitive overload of thinking to update them here when anything changes.
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  dataError: any;
+  dataError: DataErrorShape;
   t: TFunction;
   responseVercelIdHeader: string | null;
   timeFormat: TimeFormat;
@@ -305,7 +309,7 @@ const getError = ({
 
   if (error.message === ErrorCode.BookerLimitExceededReschedule) {
     const formattedDate = formatEventFromTime({
-      date: error.data.startTime,
+      date: error.data?.startTime || "",
       timeFormat,
       timeZone: timezone,
       language,
@@ -322,7 +326,7 @@ const getError = ({
 
   return error?.message ? (
     <>
-      {responseVercelIdHeader ?? ""} {t(messageKey, { date, count })}
+      {responseVercelIdHeader ?? ""} {t(messageKey as string, { date, count })}
       {error.data?.traceId && (
         <div className="text-subtle mt-2 text-xs">
           <span className="font-medium">{t("trace_reference_id")}:</span>
