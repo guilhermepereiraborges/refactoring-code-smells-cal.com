@@ -34,6 +34,8 @@ import { useAgentForms } from "./hooks/useAgentForms";
 import type { AgentFormValues } from "./types/schemas";
 import { restorePromptComplexity } from "./utils/promptUtils";
 
+type AgentConfigTab = "outgoingCalls" | "phoneNumber" | "incomingCalls";
+
 type AgentConfigurationSheetProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -47,7 +49,7 @@ type AgentConfigurationSheetProps = {
   isOrganization?: boolean;
   workflowId?: string;
   workflowStepId?: number;
-  activeTab?: "outgoingCalls" | "phoneNumber" | "incomingCalls";
+  activeTab?: AgentConfigTab;
   form: UseFormReturn<FormValues>;
   eventTypeOptions?: Option[];
 };
@@ -71,7 +73,7 @@ export function AgentConfigurationSheet({
   const { t } = useLocale();
   const utils = trpc.useUtils();
 
-  const [activeTab, setActiveTab] = useState<"outgoingCalls" | "phoneNumber" | "incomingCalls">(
+  const [activeTab, setActiveTab] = useState<AgentConfigTab>(
     _activeTab ?? "outgoingCalls"
   );
   const [isWebCallDialogOpen, setIsWebCallDialogOpen] = useState(false);
@@ -140,7 +142,7 @@ export function AgentConfigurationSheet({
             <SheetTitle className="mb-6">{t("cal_ai_agent_configuration")}</SheetTitle>
             <ToggleGroup
               onValueChange={(val) => {
-                setActiveTab((val || "outgoingCalls") as "outgoingCalls" | "phoneNumber" | "incomingCalls");
+                setActiveTab((val || "outgoingCalls") as AgentConfigTab);
               }}
               value={activeTab}
               options={[
