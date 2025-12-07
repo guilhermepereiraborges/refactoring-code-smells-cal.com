@@ -50,23 +50,27 @@ import { useEmbedDialogCtx } from "./lib/hooks/useEmbedDialogCtx";
 import { useEmbedParams } from "./lib/hooks/useEmbedParams";
 import type { EmbedTabs, EmbedType, EmbedTypes, PreviewState, EmbedConfig } from "./types";
 
+type NullableString = string | null;
+type OptionalString = string | undefined;
+type OptionalNumber = number | undefined;
+
 type EventType = RouterOutputs["viewer"]["eventTypes"]["get"]["eventType"] | undefined;
 type EmbedDialogProps = {
   types: EmbedTypes;
   tabs: EmbedTabs;
   eventTypeHideOptionDisabled: boolean;
-  defaultBrandColor: { brandColor: string | null; darkBrandColor: string | null } | null;
+  defaultBrandColor: { brandColor: NullableString; darkBrandColor: NullableString } | null;
   noQueryParamMode?: boolean;
 };
 
 type GotoStateProps = {
   embedType?: EmbedType | null;
-  embedTabName?: string | null;
-  embedUrl?: string | null;
-  eventId?: string | null;
-  namespace?: string | null;
-  date?: string | null;
-  month?: string | null;
+  embedTabName?: NullableString;
+  embedUrl?: NullableString;
+  eventId?: NullableString;
+  namespace?: NullableString;
+  date?: NullableString;
+  month?: NullableString;
   dialog?: string;
 };
 
@@ -85,9 +89,9 @@ function chooseTimezone({
   timezoneFromTimePreferences,
   userSettingsTimezone,
 }: {
-  timezoneFromBookerStore: string | null;
+  timezoneFromBookerStore: NullableString;
   timezoneFromTimePreferences: string;
-  userSettingsTimezone: string | undefined;
+  userSettingsTimezone: OptionalString;
 }) {
   // We prefer user's timezone configured in settings at the moment - Might be a better idea to prefer timezoneFromTimePreferences over user settings as the user might be in different timezone
   return timezoneFromBookerStore ?? userSettingsTimezone ?? timezoneFromTimePreferences;
@@ -245,8 +249,8 @@ const EmailEmbed = ({
   username: string;
   orgSlug?: string;
   isTeamEvent: boolean;
-  selectedDuration: number | undefined;
-  setSelectedDuration: Dispatch<SetStateAction<number | undefined>>;
+  selectedDuration: OptionalNumber;
+  setSelectedDuration: Dispatch<SetStateAction<OptionalNumber>>;
   userSettingsTimezone?: string;
 }) => {
   const { t, i18n } = useLocale();
@@ -469,7 +473,7 @@ const EmailEmbedPreview = ({
   month?: string;
   selectedDateAndTime: { [key: string]: string[] };
   calLink: string;
-  selectedDuration: number | undefined;
+  selectedDuration: OptionalNumber;
   userSettingsTimezone?: string;
 }) => {
   const { t } = useLocale();
