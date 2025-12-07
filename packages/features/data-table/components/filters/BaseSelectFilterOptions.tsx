@@ -24,28 +24,29 @@ import type {
 } from "../../lib/types";
 import type { FilterType } from "@calcom/types/data-table";
 
+type SelectFilterType = Extract<FilterType, "ms" | "ss">;
+type OptionValue = string | number;
+
 type FilterableColumn = Extract<
   _FilterableColumn,
-  { type: Extract<FilterType, "ms" | "ss"> }
+  { type: SelectFilterType }
 >;
 
-type FilterableSelectColumn<T extends Extract<FilterType, "ms" | "ss">> =
+type FilterableSelectColumn<T extends SelectFilterType> =
   Extract<FilterableColumn, { type: T }>;
 
-type FilterValue<T extends Extract<FilterType, "ms" | "ss">> = ReturnType<
+type FilterValue<T extends SelectFilterType> = ReturnType<
   typeof useFilterValue<T, FilterValueSchema<T>>
 >;
 
-export type BaseSelectFilterOptionsProps<
-  T extends Extract<FilterType, "ms" | "ss">
-> = {
+export type BaseSelectFilterOptionsProps<T extends SelectFilterType> = {
   column: FilterableSelectColumn<T>;
   filterValueSchema: FilterValueSchema<T>;
-  isOptionSelected: (filterValue: FilterValue<T> | undefined, optionValue: string | number) => boolean;
+  isOptionSelected: (filterValue: FilterValue<T> | undefined, optionValue: OptionValue) => boolean;
   onOptionSelect: (
     column: FilterableSelectColumn<T>,
     currentFilterValue: FilterValue<T> | undefined,
-    optionValue: string | number
+    optionValue: OptionValue
   ) => void;
   testIdPrefix: string;
 };
@@ -87,9 +88,7 @@ function getSectionedOptions(options: FacetedValue[]) {
   return sectionedOptions;
 }
 
-export function BaseSelectFilterOptions<
-  T extends Extract<FilterType, "ms" | "ss">
->({
+export function BaseSelectFilterOptions<T extends SelectFilterType>({
   column,
   filterValueSchema,
   isOptionSelected,
