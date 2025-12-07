@@ -30,6 +30,11 @@ const formSchema = z.object({
 
 type FormSchema = z.infer<typeof formSchema>;
 
+type RoleOption = {
+  label: string;
+  value: string | MembershipRole;
+};
+
 export function EditMemberSheet({
   state,
   dispatch,
@@ -72,7 +77,7 @@ export function EditMemberSheet({
     }
   );
 
-  const options = useMemo(() => {
+  const options = useMemo<RoleOption[]>(() => {
     // If we have custom roles, only show custom roles
     if (customRoles && customRoles.length > 0) {
       return customRoles.map((customRole) => ({
@@ -240,7 +245,7 @@ export function EditMemberSheet({
                       {shouldUseSelect ? (
                         <Select
                           value={options.find((option) => option.value === form.watch("role"))}
-                          onChange={(selectedOption: any) => {
+                          onChange={(selectedOption: RoleOption | null) => {
                             if (selectedOption) {
                               form.setValue("role", selectedOption.value);
                             }
