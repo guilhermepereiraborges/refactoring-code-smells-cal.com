@@ -178,6 +178,8 @@ const getLocationProvider = (location: string | undefined, metadata?: Record<str
   };
 };
 
+type ActiveModal = "ACTIONS" | "RESCHEDULE" | null;
+
 export default function BookingDetail() {
   const router = useRouter();
   const { uid } = useLocalSearchParams<{ uid: string }>();
@@ -186,8 +188,7 @@ export default function BookingDetail() {
   const [loading, setLoading] = useState(true);
   const [booking, setBooking] = useState<ExtendedBooking | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [showActionsModal, setShowActionsModal] = useState(false);
-  const [showRescheduleModal, setShowRescheduleModal] = useState(false);
+  const [activeModal, setActiveModal] = useState<ActiveModal>(null);
   const [rescheduleReason, setRescheduleReason] = useState("");
   const [rescheduling, setRescheduling] = useState(false);
 
@@ -245,7 +246,7 @@ export default function BookingDetail() {
       });
 
       Alert.alert("Success", "Reschedule request sent successfully");
-      setShowRescheduleModal(false);
+      setActiveModal(null);
       setRescheduleReason("");
 
       // Refresh booking data
@@ -308,7 +309,7 @@ export default function BookingDetail() {
           ),
           headerRight: () => (
             <TouchableOpacity
-              onPress={() => setShowActionsModal(true)}
+              onPress={() => setActiveModal("ACTIONS")}
               className="items-center justify-center rounded-full"
               style={{ width: 40, height: 40, backgroundColor: "#F0F0F0" }}
             >
@@ -478,14 +479,14 @@ export default function BookingDetail() {
 
       {/* Booking Actions Modal */}
       <FullScreenModal
-        visible={showActionsModal}
+        visible={activeModal === "ACTIONS"}
         animationType="fade"
-        onRequestClose={() => setShowActionsModal(false)}
+        onRequestClose={() => setActiveModal(null)}
       >
         <TouchableOpacity
           className="flex-1 items-center justify-center bg-black/50 p-2 md:p-4"
           activeOpacity={1}
-          onPress={() => setShowActionsModal(false)}
+          onPress={() => setActiveModal(null)}
         >
           <TouchableOpacity
             className="mx-4 w-full max-w-sm rounded-2xl bg-white"
@@ -503,7 +504,7 @@ export default function BookingDetail() {
               {/* View Booking */}
               <TouchableOpacity
                 onPress={() => {
-                  setShowActionsModal(false);
+                  setActiveModal(null);
                   // TODO: Navigate to booking view page
                   console.log("View booking");
                 }}
@@ -524,8 +525,7 @@ export default function BookingDetail() {
               {/* Request Reschedule */}
               <TouchableOpacity
                 onPress={() => {
-                  setShowActionsModal(false);
-                  setShowRescheduleModal(true);
+                  setActiveModal("RESCHEDULE");
                 }}
                 className="flex-row items-center p-2 hover:bg-gray-50 md:p-4"
               >
@@ -536,7 +536,7 @@ export default function BookingDetail() {
               {/* Edit Location */}
               <TouchableOpacity
                 onPress={() => {
-                  setShowActionsModal(false);
+                  setActiveModal(null);
                   // TODO: Open edit location dialog
                   console.log("Edit location");
                 }}
@@ -549,7 +549,7 @@ export default function BookingDetail() {
               {/* Add Guests */}
               <TouchableOpacity
                 onPress={() => {
-                  setShowActionsModal(false);
+                  setActiveModal(null);
                   // TODO: Open add guests dialog
                   console.log("Add guests");
                 }}
@@ -571,7 +571,7 @@ export default function BookingDetail() {
               {locationProvider?.url && (
                 <TouchableOpacity
                   onPress={() => {
-                    setShowActionsModal(false);
+                    setActiveModal(null);
                     // TODO: Open view recordings dialog
                     console.log("View recordings");
                   }}
@@ -586,7 +586,7 @@ export default function BookingDetail() {
               {locationProvider?.url && (
                 <TouchableOpacity
                   onPress={() => {
-                    setShowActionsModal(false);
+                    setActiveModal(null);
                     // TODO: Open session details dialog
                     console.log("Meeting session details");
                   }}
@@ -600,7 +600,7 @@ export default function BookingDetail() {
               {/* Mark as No-Show */}
               <TouchableOpacity
                 onPress={() => {
-                  setShowActionsModal(false);
+                  setActiveModal(null);
                   // TODO: Mark as no-show
                   console.log("Mark as no-show");
                 }}
@@ -616,7 +616,7 @@ export default function BookingDetail() {
               {/* Report Booking */}
               <TouchableOpacity
                 onPress={() => {
-                  setShowActionsModal(false);
+                  setActiveModal(null);
                   // TODO: Open report booking dialog
                   console.log("Report booking");
                 }}
@@ -632,7 +632,7 @@ export default function BookingDetail() {
               {/* Cancel Booking */}
               <TouchableOpacity
                 onPress={() => {
-                  setShowActionsModal(false);
+                  setActiveModal(null);
                   Alert.alert("Cancel Booking", "Are you sure you want to cancel this booking?", [
                     { text: "No", style: "cancel" },
                     {
@@ -656,7 +656,7 @@ export default function BookingDetail() {
             <View className="border-t border-gray-200 p-2 md:p-4">
               <TouchableOpacity
                 className="w-full rounded-lg bg-gray-100 p-3"
-                onPress={() => setShowActionsModal(false)}
+                onPress={() => setActiveModal(null)}
               >
                 <Text className="text-center text-base font-medium text-gray-700">Cancel</Text>
               </TouchableOpacity>
@@ -667,14 +667,14 @@ export default function BookingDetail() {
 
       {/* Reschedule Modal */}
       <FullScreenModal
-        visible={showRescheduleModal}
+        visible={activeModal === "RESCHEDULE"}
         animationType="fade"
-        onRequestClose={() => setShowRescheduleModal(false)}
+        onRequestClose={() => setActiveModal(null)}
       >
         <TouchableOpacity
           className="flex-1 items-center justify-center bg-black/50 p-2 md:p-4"
           activeOpacity={1}
-          onPress={() => setShowRescheduleModal(false)}
+          onPress={() => setActiveModal(null)}
         >
           <TouchableOpacity
             className="w-[90%] max-w-[500px] rounded-2xl bg-white"
@@ -730,7 +730,7 @@ export default function BookingDetail() {
                 <TouchableOpacity
                   className="rounded-xl border border-[#D1D5DB] bg-white px-2 py-2 md:px-4"
                   onPress={() => {
-                    setShowRescheduleModal(false);
+                    setActiveModal(null);
                     setRescheduleReason("");
                   }}
                   disabled={rescheduling}
