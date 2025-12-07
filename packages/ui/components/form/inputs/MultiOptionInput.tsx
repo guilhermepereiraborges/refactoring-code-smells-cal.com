@@ -18,7 +18,6 @@ export interface Option {
   label: string;
   value?: string;
   id?: string;
-  [key: string]: any;
 }
 
 interface MultiOptionInputProps<TFieldValues extends FieldValues> {
