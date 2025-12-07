@@ -317,7 +317,7 @@ const NewRoutingManager = ({
   const { data: chosenEventTypeData, isPending: isChosenEventTypePending } =
     trpc.viewer.eventTypes.get.useQuery(
       // enabled prop ensures that the query is not run if the chosenEventTypeId is not there
-      { id: chosenEventTypeId! },
+      { id: chosenEventTypeId ?? -1 },
       {
         enabled: enableChosenEventTypeQuery,
       }
