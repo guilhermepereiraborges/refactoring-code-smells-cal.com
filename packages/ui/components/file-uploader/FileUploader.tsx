@@ -174,9 +174,13 @@ export default function FileUploader({
 
   const handleFileRemove = useCallback(
     (fileId: string) => {
+      const fileToRemove = files.find((file) => file.id === fileId);
+      if (!fileToRemove) {
+        return;
+      }
       const updatedFiles = files.filter((file) => file.id !== fileId);
       setFiles(updatedFiles);
-      onFilesChange(updatedFiles, [], [files.find((file) => file.id === fileId)!]);
+      onFilesChange(updatedFiles, [], [fileToRemove]);
     },
     [files, onFilesChange]
   );
