@@ -39,6 +39,8 @@ interface BasicsTabProps {
 }
 
 export function BasicsTab(props: BasicsTabProps) {
+  const locationIconUrl = props.getSelectedLocationIconUrl();
+
   return (
     <View className="gap-3">
       {/* Title and Description Card */}
@@ -165,9 +167,9 @@ export function BasicsTab(props: BasicsTabProps) {
             <View className="flex-1 flex-row items-center">
               {!props.conferencingLoading &&
                 props.selectedLocation &&
-                props.getSelectedLocationIconUrl() && (
+                locationIconUrl && (
                   <SvgImage
-                    uri={props.getSelectedLocationIconUrl()!}
+                    uri={locationIconUrl}
                     width={20}
                     height={20}
                     style={{ marginRight: 8 }}
