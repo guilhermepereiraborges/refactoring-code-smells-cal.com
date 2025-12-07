@@ -11,14 +11,16 @@ import { Button } from "@calcom/ui/components/button";
 import { Label, Select, TextArea, CheckboxField } from "@calcom/ui/components/form";
 import { Icon } from "@calcom/ui/components/icon";
 
+type NullableString = string | null;
+type SelectOptionValue = number | string;
+type SelectOption = {
+  value: SelectOptionValue;
+  label: string;
+};
+
 interface InternalNotePresetsSelectProps {
   internalNotePresets: { id: number; name: string }[];
-  onPresetSelect: (
-    option: {
-      value: number | string;
-      label: string;
-    } | null
-  ) => void;
+  onPresetSelect: (option: SelectOption | null) => void;
   setCancellationReason: (reason: string) => void;
 }
 
@@ -34,7 +36,7 @@ const InternalNotePresetsSelect = ({
     return null;
   }
 
-  const handleSelectChange = (option: { value: number | string; label: string } | null) => {
+  const handleSelectChange = (option: SelectOption | null) => {
     if (option?.value === "other") {
       setShowOtherInput(true);
       setCancellationReason("");
@@ -79,18 +81,18 @@ type Props = {
     payment?: {
       amount: number;
       currency: string;
-      appId: string | null;
+      appId: NullableString;
     } | null;
   };
   profile: {
-    name: string | null;
-    slug: string | null;
+    name: NullableString;
+    slug: NullableString;
   };
   recurringEvent: RecurringEvent | null;
-  team?: string | null;
+  team?: NullableString;
   teamId?: number;
   setIsCancellationMode: (value: boolean) => void;
-  theme: string | null;
+  theme: NullableString;
   allRemainingBookings: boolean;
   seatReferenceUid?: string;
   currentUserEmail?: string;
@@ -104,7 +106,7 @@ type Props = {
     eventType: unknown;
   };
   isHost: boolean;
-  internalNotePresets: { id: number; name: string; cancellationReason: string | null }[];
+  internalNotePresets: { id: number; name: string; cancellationReason: NullableString }[];
   eventTypeMetadata?: Record<string, unknown> | null;
 };
 
@@ -121,7 +123,7 @@ export default function CancelBooking(props: Props) {
     eventTypeMetadata,
   } = props;
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(booking ? null : t("booking_already_cancelled"));
+  const [error, setError] = useState<NullableString>(booking ? null : t("booking_already_cancelled"));
   const [internalNote, setInternalNote] = useState<{ id: number; name: string } | null>(null);
   const [acknowledgeCancellationNoShowFee, setAcknowledgeCancellationNoShowFee] = useState(false);
 
