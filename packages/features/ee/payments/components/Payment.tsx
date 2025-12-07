@@ -237,7 +237,10 @@ const PaymentForm = (props: Props) => {
 };
 
 export default function PaymentComponent(props: Props) {
-  const stripePromise = getStripe(props.payment.data.stripe_publishable_key as any);
+  const rawPublishableKey = props.payment.data["stripe_publishable_key"];
+  const stripePublishableKey = typeof rawPublishableKey === "string" ? rawPublishableKey : "";
+
+  const stripePromise = getStripe(stripePublishableKey);
   const [theme, setTheme] = useState<"stripe" | "night">("stripe");
 
   useEffect(() => {
