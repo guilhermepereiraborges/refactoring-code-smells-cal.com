@@ -19,6 +19,12 @@ import { FullScreenModal } from "../components/FullScreenModal";
 import { getAppIconUrl } from "../utils/getAppIconUrl";
 import { getDefaultLocationIconUrl, defaultLocations } from "../utils/defaultLocations";
 
+interface ExtendedBooking extends Booking {
+  recurringBookingUid?: string;
+  metadata?: Record<string, unknown>;
+  responses?: Record<string, unknown>;
+}
+
 // Format date: "Tuesday, November 25, 2025"
 const formatDateFull = (dateString: string): string => {
   if (!dateString) return "";
@@ -75,10 +81,11 @@ const getInitials = (name: string): string => {
   return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
 };
 
-// Get location provider info
-const getLocationProvider = (location: string | undefined, metadata?: Record<string, any>) => {
+const getLocationProvider = (location: string | undefined, metadata?: Record<string, unknown>) => {
   // Check metadata for videoCallUrl first
-  const videoCallUrl = metadata?.videoCallUrl;
+  const videoCallUrl =
+    metadata && typeof metadata.videoCallUrl === "string" ? metadata.videoCallUrl : undefined;
+
   const locationToCheck = videoCallUrl || location;
 
   if (!locationToCheck) return null;
@@ -177,7 +184,7 @@ export default function BookingDetail() {
   const insets = useSafeAreaInsets();
 
   const [loading, setLoading] = useState(true);
-  const [booking, setBooking] = useState<Booking | null>(null);
+  const [booking, setBooking] = useState<ExtendedBooking | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showActionsModal, setShowActionsModal] = useState(false);
   const [showRescheduleModal, setShowRescheduleModal] = useState(false);
@@ -194,15 +201,15 @@ export default function BookingDetail() {
     try {
       setLoading(true);
       setError(null);
-      const bookingData = await CalComAPIService.getBookingByUid(uid);
+      const bookingData = (await CalComAPIService.getBookingByUid(uid)) as ExtendedBooking;
       console.log("Booking data received:", JSON.stringify(bookingData, null, 2));
       console.log("User:", bookingData.user);
       console.log("Hosts:", bookingData.hosts);
       console.log("Attendees:", bookingData.attendees);
       console.log("Recurring fields:", {
         recurringEventId: bookingData.recurringEventId,
-        recurringBookingUid: (bookingData as any).recurringBookingUid,
-        metadata: (bookingData as any).metadata,
+        recurringBookingUid: bookingData.recurringBookingUid,
+        metadata: bookingData.metadata,
       });
       setBooking(bookingData);
     } catch (err) {
@@ -219,7 +226,7 @@ export default function BookingDetail() {
   const handleJoinMeeting = () => {
     if (!booking?.location) return;
 
-    const provider = getLocationProvider(booking.location);
+    const provider = getLocationProvider(booking.location, booking.responses);
     if (provider?.url) {
       Linking.openURL(provider.url);
     }
