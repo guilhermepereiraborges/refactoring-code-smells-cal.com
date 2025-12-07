@@ -48,6 +48,11 @@ export type FieldPathByValue<TFieldValues extends FieldValues, TValue> = {
   [Key in FieldPath<TFieldValues>]: FieldPathValue<TFieldValues, Key> extends TValue ? Key : never;
 }[FieldPath<TFieldValues>];
 
+interface DateSlotAction {
+  append?: TimeRange;
+  prepend?: TimeRange;
+}
+
 export const ScheduleDay = <TFieldValues extends FieldValues>({
   name,
   weekday,
@@ -285,11 +290,10 @@ export const DayRanges = <TFieldValues extends FieldValues>({
                 variant="icon"
                 StartIcon="plus"
                 onClick={() => {
-                  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                  const slotRange: any = getDateSlotRange(
-                    getValues(`${name}.${fields.length - 1}`),
-                    getValues(`${name}.0`)
-                  );
+                  const lastRange = getValues(`${name}.${fields.length - 1}`) as TimeRange;
+                  const firstRange = getValues(`${name}.0`) as TimeRange;
+
+                  const slotRange = getDateSlotRange(lastRange, firstRange);
 
                   if (slotRange?.append) {
                     append(slotRange.append);
@@ -530,9 +534,12 @@ const useOptions = (timeFormat: number | null) => {
   return { options: filteredOptions, filter };
 };
 
-const getDateSlotRange = (endField?: FieldArrayWithId, startField?: FieldArrayWithId) => {
-  const timezoneStartRange = dayjs((startField as unknown as TimeRange).start).utc();
-  const nextRangeStart = dayjs((endField as unknown as TimeRange).end).utc();
+const getDateSlotRange = (
+  endRange: TimeRange,
+  startRange: TimeRange
+): DateSlotAction | undefined => {
+  const timezoneStartRange = dayjs(startRange.start).utc();
+  const nextRangeStart = dayjs(endRange.end).utc();
   const nextRangeEnd =
     nextRangeStart.hour() === 23
       ? dayjs(nextRangeStart).add(59, "minutes").add(59, "seconds").add(999, "milliseconds")
@@ -549,7 +556,7 @@ const getDateSlotRange = (endField?: FieldArrayWithId, startField?: FieldArrayWi
     };
   }
 
-  const previousRangeStart = dayjs((startField as unknown as TimeRange).start).subtract(1, "hour");
+  const previousRangeStart = dayjs(startRange.start).subtract(1, "hour");
   const startOfDay = timezoneStartRange.startOf("day");
 
   if (!timezoneStartRange.isSame(startOfDay)) {
